@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Ícones PWA</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2a5298;
+        }
+        canvas {
+            border: 2px solid #ddd;
+            margin: 20px 0;
+            display: block;
+        }
+        button {
+            background: #2a5298;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #1e3c72;
+        }
+        .info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Gerador de Ícones PWA</h1>
+        <div class="info">
+            <p>Este gerador cria ícones básicos para o PWA. Clique nos botões abaixo para gerar e baixar os ícones necessários.</p>
+        </div>
+        
+        <h3>Ícone 192x192</h3>
+        <canvas id="canvas192" width="192" height="192"></canvas>
+        <button onclick="gerarIcone(192)">Gerar e Baixar icon-192.png</button>
+        
+        <h3>Ícone 512x512</h3>
+        <canvas id="canvas512" width="512" height="512"></canvas>
+        <button onclick="gerarIcone(512)">Gerar e Baixar icon-512.png</button>
+    </div>
+
+    <script>
+        function gerarIcone(tamanho) {
+            const canvas = document.getElementById(`canvas${tamanho}`);
+            const ctx = canvas.getContext('2d');
+            
+            // Fundo gradiente
+            const gradient = ctx.createLinearGradient(0, 0, tamanho, tamanho);
+            gradient.addColorStop(0, '#2a5298');
+            gradient.addColorStop(1, '#1e3c72');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, tamanho, tamanho);
+            
+            // Texto DASCO
+            ctx.fillStyle = 'white';
+            ctx.font = `bold ${tamanho * 0.3}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('DASCO', tamanho / 2, tamanho / 2 - tamanho * 0.1);
+            
+            // Texto ENGENHARIA
+            ctx.font = `${tamanho * 0.08}px Arial`;
+            ctx.fillText('ENGENHARIA', tamanho / 2, tamanho / 2 + tamanho * 0.05);
+            
+            // Baixar imagem
+            canvas.toBlob(function(blob) {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `icon-${tamanho}.png`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            });
+        }
+        
+        // Gerar automaticamente ao carregar
+        window.addEventListener('load', function() {
+            gerarIcone(192);
+            setTimeout(() => gerarIcone(512), 500);
+        });
+    </script>
+</body>
+</html>
+
